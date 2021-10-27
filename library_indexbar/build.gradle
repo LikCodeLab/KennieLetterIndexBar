@@ -12,4 +12,5 @@ dependencies {
     implementation depX.appcompat
     implementation depX.material
     implementation depX.constraintlayout
+    implementation project(path: ':library_res')
 }
