@@ -13,6 +13,7 @@ rootProject.name = "KennieLibTemplate"
 include ':app_example'
 
 //************************公共库 目录************************
+include ':library_res'
 include ':library'
 
 
