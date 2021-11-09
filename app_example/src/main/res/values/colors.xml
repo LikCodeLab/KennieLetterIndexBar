@@ -7,4 +7,6 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="common_text_gray">#B0B3BF</color>
+    <color name="contacts_tab_under_line">#00CAFC</color>
 </resources>
