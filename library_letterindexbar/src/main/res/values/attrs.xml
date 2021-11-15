@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="LetterIndexBarView">
+        <!--索引文字大小-->
         <attr name="indexTextSize" format="dimension" />
+        <!--索引文字颜色-->
         <attr name="indexTextColor" format="color|reference" />
-
+        <!--侧边栏背景颜色-->
         <attr name="sidebarBackgroundColor" format="color|reference" />
+        <!--侧边栏选中颜色-->
         <attr name="sidebarChooseTextColor" format="color|reference" />
+        <!--侧边栏文字放大大小-->
         <attr name="sidebarLargeTextSize" format="dimension" />
         <attr name="sidebarRadius" format="dimension" />
         <attr name="sidebarBallRadius" format="dimension" />

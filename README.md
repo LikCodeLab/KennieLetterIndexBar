@@ -5,8 +5,7 @@
 <p align="center">
     <strong>字母索引导航</strong>
     <br>
-    <br>
-    <a href="https://kennielab.github.io/KennieLetterIndexBar/">使用文档</a>
+    <!-- <a href="https://kennielab.github.io/KennieLetterIndexBar/">使用文档</a> -->
     <br>
 </p>
 
@@ -25,18 +24,57 @@
 
 **开源不易，如果喜欢的话希望给个 `Star` 或 `Fork` ^_^ ，谢谢~~**
 
-## APP下载
-
-- [GitHub下载](https://github.com/kennielab/KennieLetterIndexBar/tree/template%2Flibrary/releases) [![](https://img.shields.io/badge/Download-apk-green.svg)](https://github.com/kennielab/KennieLetterIndexBar/tree/template%2Flibrary/releases/app-release.apk)
-- 扫码
-
-![](./resources/download_qr_code.png)
 
 ## 预览
 
-| ![](resources/screenshots/01.jpg) | ![](resources/screenshots/02.jpg) | ![](resources/screenshots/03.jpg) | ![](resources/screenshots/04.jpg) |
-| --- | --- | --- | --- |
-| ![](resources/screenshots/05.jpg) | ![](resources/screenshots/06.jpg) | ![](art/07.jpg) | ![](resources/screenshots/08.jpg) |
+<img src="./resources/screenshots/screenshot_01.jpg" width="50%"/>
+
+
+## 如何使用
+
+### 1. 项目根目录的 build.gradle 的 buildscript 添加
+```
+allprojects {
+     repositories {
+        ...
+        maven { url "https://jitpack.io" }
+    }
+}
+```
+
+### 2.然后在 dependencies 添加 
+
+Latest Version：[![](https://jitpack.io/v/kennielab/KennieViewSwitcher.svg)](https://jitpack.io/#kennielab/KennieViewSwitcher)
+
+```gradle
+dependencies {
+  implementation 'com.github.kennielab:KennieLetterIndexBar:1.0.0'
+}
+```
+#### XML
+```xml
+    <com.kennie.library.indexbar.LetterIndexBarView
+        android:id="@+id/side_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+```
+#### Attrs
+```xml
+    <declare-styleable name="LetterIndexBarView">
+        <!--索引文字大小-->
+        <attr name="indexTextSize" format="dimension" />
+        <!--索引文字颜色-->
+        <attr name="indexTextColor" format="color|reference" />
+        <!--侧边栏背景颜色-->
+        <attr name="sidebarBackgroundColor" format="color|reference" />
+        <!--侧边栏选中颜色-->
+        <attr name="sidebarChooseTextColor" format="color|reference" />
+        <!--侧边栏文字放大大小-->
+        <attr name="sidebarLargeTextSize" format="dimension" />
+        <attr name="sidebarRadius" format="dimension" />
+        <attr name="sidebarBallRadius" format="dimension" />
+    </declare-styleable>
+```
 
 ## 更新日志
 - [详细日志](./CHANGELOG.md)
