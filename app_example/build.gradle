@@ -19,7 +19,7 @@ dependencies {
     implementation depK.core
     implementation depX.appcompat
     implementation depX.material
-    implementation project(':library_res')
+//    implementation project(':library_res')
     api 'com.github.kennielab:KennieLetterIndexBar:v0.0.3'
     //implementation project(':library_letterindexbar')
 }
