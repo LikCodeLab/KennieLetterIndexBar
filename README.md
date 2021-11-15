@@ -5,7 +5,7 @@
 <p align="center">
     <strong>字母索引导航</strong>
     <br>
-    <!-- <a href="https://kennielab.github.io/KennieLetterIndexBar/">使用文档</a> -->
+    <a href="https://kennielab.github.io/KennieLetterIndexBar/">使用文档</a>
     <br>
 </p>
 
@@ -44,11 +44,11 @@ allprojects {
 
 ### 2.然后在 dependencies 添加 
 
-Latest Version：[![](https://jitpack.io/v/kennielab/KennieViewSwitcher.svg)](https://jitpack.io/#kennielab/KennieViewSwitcher)
+Latest Version：[![](https://jitpack.io/v/kennielab/KennieLetterIndexBar.svg)](https://jitpack.io/#kennielab/KennieLetterIndexBar)
 
 ```gradle
 dependencies {
-  implementation 'com.github.kennielab:KennieLetterIndexBar:1.0.0'
+  implementation 'com.github.kennielab:KennieLetterIndexBar:{Latest Version}'
 }
 ```
 #### XML
@@ -77,7 +77,7 @@ dependencies {
 ```
 
 ## 更新日志
-- [详细日志](./CHANGELOG.md)
+- [详细日志](./UPDATELOG.md)
 
 ### 1.0.0
 

@@ -17,5 +17,4 @@ dependencies {
     implementation depK.core
     implementation depX.appcompat
     implementation depX.material
-    implementation project(path: ':library_res')
 }

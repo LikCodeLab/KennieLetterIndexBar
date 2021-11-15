@@ -13,10 +13,14 @@ android {
 
 }
 
+
+
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar','*.aar'], dir: 'libs')
     implementation depK.core
     implementation depX.appcompat
     implementation depX.material
-    implementation project(':library_letterindexbar')
+    implementation project(':library_res')
+    //api 'com.github.kennielab:KennieLetterIndexBar:develop_v0.0.1'
+    //implementation project(':library_letterindexbar')
 }
