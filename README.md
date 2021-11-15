@@ -1,12 +1,12 @@
-# KennieIndexBar
+# KennieLetterIndexBar
 
-<p align="center"><img src="./resources/screenshots/logo.gif" width="50%"/></p>
+<p align="center"><img src="./resources/screenshots/logo.png" width="10%"/></p>
 
 <p align="center">
-    <strong>侧边字母索引</strong>
+    <strong>字母索引侧边栏</strong>
     <br>
     <br>
-    <a href="https://kenniecode.github.io/KennieAndroidTemplate/">使用文档</a>
+    <a href="https://kennielab.github.io/KennieLetterIndexBar/">使用文档</a>
     <br>
 </p>
 
@@ -17,9 +17,33 @@
 </p>
 
 
-## 说明
+## 简介
 
-侧边字母索引
+侧边字母索引导航
+
+如有任何疑问或者Bug，请在 github 上公开讨论[技术问题](https://github.com/kennielab/KennieLetterIndexBar/issues)
+
+**开源不易，如果喜欢的话希望给个 `Star` 或 `Fork` ^_^ ，谢谢~~**
+
+## APP下载
+
+- [GitHub下载](https://github.com/kennielab/KennieLetterIndexBar/tree/template%2Flibrary/releases) [![](https://img.shields.io/badge/Download-apk-green.svg)](https://github.com/kennielab/KennieLetterIndexBar/tree/template%2Flibrary/releases/app-release.apk)
+- 扫码
+
+![](./resources/download_qr_code.png)
+
+## 预览
+
+| ![](resources/screenshots/01.jpg) | ![](resources/screenshots/02.jpg) | ![](resources/screenshots/03.jpg) | ![](resources/screenshots/04.jpg) |
+| --- | --- | --- | --- |
+| ![](resources/screenshots/05.jpg) | ![](resources/screenshots/06.jpg) | ![](art/07.jpg) | ![](resources/screenshots/08.jpg) |
+
+## 更新日志
+- [详细日志](./CHANGELOG.md)
+
+### 1.0.0
+
+- 第一版试水
 
 ## 注意事项
 
@@ -44,6 +68,17 @@
 
    手机端 Android7.0 ~ Android 11.0
 
+## 联系方式
+- 微信：**lkweixh**
+- 邮箱：245794335@qq.com
+
+## 赞赏
+
+**如果您觉得还不错，您可以打赏哦，您的支持将是我持续维护的动力。**
+
+|  微信支付 |
+|--|
+|  ![SMOOTH](./resources/pay/微信支付.jpg) |
 
 ## 感谢
 
