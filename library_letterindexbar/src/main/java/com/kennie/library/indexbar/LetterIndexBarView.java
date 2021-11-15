@@ -224,7 +224,7 @@ public class LetterIndexBarView extends View {
         if (currentPosition != -1) {
             // 绘制右侧选中字符
             mLettersPaint.reset();
-            mLettersPaint.setColor(Color.RED);
+            mLettersPaint.setColor(Color.BLACK);
             mLettersPaint.setTextSize(mIndexTextSize);
             mLettersPaint.setTextAlign(Paint.Align.CENTER);
             canvas.drawText(mLetters[currentPosition], mPosX, mPosY, mLettersPaint);
@@ -290,8 +290,11 @@ public class LetterIndexBarView extends View {
                 // 关闭波浪效果
                 startAnimator(mRatio, 0f);
                 currentPosition = -1;
-                if (null != onLetterChangeListener)
-                    onLetterChangeListener.onLetterClosed(mNewPosition, mLetters[mNewPosition]);
+                if (null != onLetterChangeListener) {
+                    if (mNewPosition >= 0 && mNewPosition < mLetters.length) {
+                        onLetterChangeListener.onLetterClosed(mNewPosition, mLetters[mNewPosition]);
+                    }
+                }
                 break;
             default:
                 break;
