@@ -1,10 +1,10 @@
-site_name: Library模板文档
+site_name: KennieLetterIndexBar文档
 site_author: kennie
-site_description: Library描述说明
+site_description: 字母索引导航
 copyright: Copyright &copy; 2021 kennie
 
 repo_name: Github
-repo_url: https://github.com/kennielab/KennieLibTemplate
+repo_url: https://github.com/kennielab/KennieLetterIndexBar
 
 docs_dir: 'docs'
 
@@ -13,5 +13,5 @@ theme:
   
 nav:
   - 使用: index.md
-  - 开发日志: dev_log.md
-  - 更新日志: update_log.md
+  - 开发日志: DEVLOG.md
+  - 更新日志: UPDATELOG.md
