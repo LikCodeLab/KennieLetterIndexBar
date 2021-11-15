@@ -4,15 +4,16 @@
 
     <application
         android:allowBackup="false"
-        android:icon="@mipmap/app_launcher"
+        android:icon="@mipmap/logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/app_launcher_round"
+        android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
-        android:theme="@style/Theme.KennieLibTemplate">
+        android:theme="@style/Theme.AppCompat.DayNight">
 
         <activity
             android:name=".ui.TestActivity"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/app_name_cn">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

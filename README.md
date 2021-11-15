@@ -3,7 +3,7 @@
 <p align="center"><img src="./resources/screenshots/logo.png" width="10%"/></p>
 
 <p align="center">
-    <strong>字母索引侧边导航</strong>
+    <strong>字母索引导航</strong>
     <br>
     <br>
     <a href="https://kennielab.github.io/KennieLetterIndexBar/">使用文档</a>
@@ -19,7 +19,7 @@
 
 ## 简介
 
-字母索引侧边导航
+字母索引导航
 
 如有任何疑问或者Bug，请在 github 上公开讨论[技术问题](https://github.com/kennielab/KennieLetterIndexBar/issues)
 
