@@ -30,7 +30,7 @@ public class SortModel {
 
     private int type; // 类型 0 字母 1.其他
 
-    private String tag; // 用于拓展的自定义字段
+    private String extra; // 用于拓展的自定义字段
 
     public SortModel() {
 
@@ -38,13 +38,6 @@ public class SortModel {
 
     public SortModel(@NonNull String sortLetter) {
         this.sortLetter = sortLetter;
-    }
-
-    public SortModel(long id, @NonNull String sortLetter, int type, String tag) {
-        this.id = id;
-        this.sortLetter = sortLetter;
-        this.type = type;
-        this.tag = tag;
     }
 
     public long getId() {
@@ -71,11 +64,11 @@ public class SortModel {
         this.type = type;
     }
 
-    public String getTag() {
-        return tag;
+    public String getExtra() {
+        return extra;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setExtra(String extra) {
+        this.extra = extra;
     }
 }
