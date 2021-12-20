@@ -22,4 +22,7 @@ dependencies {
     implementation kennieX.res
     //implementation kennieX.KennieLetterIndexBar
     implementation project(':library_letterindexbar')
+    implementation 'io.github.zhangethan:pinyin4j:2.6.1'
+    // https://github.com/CymChad/BaseRecyclerViewAdapterHelper
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.7'
 }

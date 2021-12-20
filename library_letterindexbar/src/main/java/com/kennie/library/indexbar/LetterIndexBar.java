@@ -24,8 +24,10 @@ import android.graphics.RectF;
 
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 /**
  * @项目名 KennieIndexBar
@@ -45,9 +47,9 @@ public class LetterIndexBar extends View {
     public static final String[] DEFAULT_LETTERS = {"#", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"
             , "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
-    private String[] mLetters = DEFAULT_LETTERS; // 字母表
+    private String[] mLetterArray = DEFAULT_LETTERS; // 字母表
 
-    private int currentPosition = -1; // 当前选中的字母位置
+    private int selectIndex = -1; // 当前选中的字母位置
     private int mOldPosition;
     private int mNewPosition;
 
@@ -95,11 +97,19 @@ public class LetterIndexBar extends View {
     // 圆形中心点X
     private float mBallCentreX;
 
-    private boolean showHighlightBg = true;// 是否显示高亮背景色
-    boolean hasDraw = false;
+    /**
+     * 是否触摸字母(用来处理滚动反复刷新字母问题)
+     */
+    private boolean isDown = false;
+
+    /**
+     * 是否显示字母提示(默认不显示)
+     */
+    private boolean isTipOverlay = false;
+    private TextView overlayTextView; // 覆盖字母提示
 
 
-    private OnLetterIndexChangeListener onLetterIndexChangeListener;
+    private OnLetterIndexChangeListener mListener;
 
 
     public LetterIndexBar(Context context) {
@@ -157,22 +167,22 @@ public class LetterIndexBar extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         mHeight = MeasureSpec.getSize(heightMeasureSpec);
         mWidth = getMeasuredWidth();
-        mItemHeight = (mHeight - mPadding) / mLetters.length;
+        mItemHeight = (mHeight - mPadding) / mLetterArray.length;
         mPosX = mWidth - 1.6f * mIndexTextSize;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        hasDraw = true;
         // 绘制背景
-        if (showHighlightBg) {
-            drawBackground(canvas);
-        }
+        drawBackground(canvas);
         // 绘制字母列表
         drawLetters(canvas);
         // 绘制圆
-        drawBallPath(canvas);
+        if (isTipOverlay()) {
+            drawBallPath(canvas);
+        }
+
         // 绘制选中的字体
         drawChooseText(canvas);
 
@@ -202,7 +212,7 @@ public class LetterIndexBar extends View {
 
     private void drawLetters(Canvas canvas) {
 
-        for (int i = 0; i < mLetters.length; i++) {
+        for (int i = 0; i < mLetterArray.length; i++) {
             mLettersPaint.reset();
             mLettersPaint.setColor(mIndexTextColor);
             mLettersPaint.setAntiAlias(true);
@@ -214,23 +224,23 @@ public class LetterIndexBar extends View {
 
             float posY = mItemHeight * i + baseline / 2 + mPadding;
 
-            if (i == currentPosition) {
+            if (i == selectIndex) {
                 mPosY = posY;
             } else {
-                canvas.drawText(mLetters[i], mPosX, posY, mLettersPaint);
+                canvas.drawText(mLetterArray[i], mPosX, posY, mLettersPaint);
             }
         }
 
     }
 
     private void drawChooseText(Canvas canvas) {
-        if (currentPosition != -1) {
+        if (selectIndex != -1) {
             // 绘制右侧选中字符
             mLettersPaint.reset();
-            mLettersPaint.setColor(Color.BLACK);
+            mLettersPaint.setColor(Color.parseColor("#07C160"));
             mLettersPaint.setTextSize(mIndexTextSize);
             mLettersPaint.setTextAlign(Paint.Align.CENTER);
-            canvas.drawText(mLetters[currentPosition], mPosX, mPosY, mLettersPaint);
+            canvas.drawText(mLetterArray[selectIndex], mPosX, mPosY, mLettersPaint);
         }
     }
 
@@ -243,10 +253,10 @@ public class LetterIndexBar extends View {
         mBallPath.close();
         canvas.drawPath(mBallPath, mWavePaint);
 
-        if (currentPosition != -1) {
+        if (selectIndex != -1) {
             // 绘制提示字符
             if (mRatio >= 0.9f) {
-                String target = mLetters[currentPosition];
+                String target = mLetterArray[selectIndex];
                 Paint.FontMetrics fontMetrics = mTextPaint.getFontMetrics();
                 float baseline = Math.abs(-fontMetrics.bottom - fontMetrics.top);
                 float x = mBallCentreX;
@@ -262,8 +272,8 @@ public class LetterIndexBar extends View {
         final float y = event.getY();
         final float x = event.getX();
 
-        mOldPosition = currentPosition;
-        mNewPosition = (int) (y / mHeight * mLetters.length);
+        mOldPosition = selectIndex;
+        mNewPosition = (int) (y / mHeight * mLetterArray.length);
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -271,33 +281,61 @@ public class LetterIndexBar extends View {
                     return false;
                 }
                 mCenterY = (int) y;
-                startAnimator(mRatio, 1.0f);
+                if (null != mListener) {
+                    mListener.onTouched(true);
+                }
+                if (isTipOverlay()) {
+                    startAnimator(mRatio, 1.0f);
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
                 // 开始触摸
                 mCenterY = (int) y;
                 // 手指滑动
                 if (mOldPosition != mNewPosition) {
-                    if (mNewPosition >= 0 && mNewPosition < mLetters.length) {
-                        currentPosition = mNewPosition;
-                        if (null != onLetterIndexChangeListener && !TextUtils.isEmpty(mLetters[mNewPosition])) {
-                            onLetterIndexChangeListener.onLetterChanged(mNewPosition, mLetters[mNewPosition]);
+                    if (mNewPosition >= 0 && mNewPosition < mLetterArray.length) {
+                        selectIndex = mNewPosition;
+                        if (null != mListener && !TextUtils.isEmpty(mLetterArray[mNewPosition])) {
+                            // 显示提示字母View
+                            if (!isTipOverlay()) {
+                                if (overlayTextView != null) {
+                                    overlayTextView.setVisibility(VISIBLE);
+                                    overlayTextView.setText(mLetterArray[mNewPosition]);
+                                }
+                            }
+
+                            mListener.onLetterChanged(mLetterArray[mNewPosition], mNewPosition);
                         }
                     }
                 }
                 invalidate();
+                //改变标记状态
+                isDown = true;
                 break;
-            case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
                 // 手指抬起
+                if (null != mListener) {
+                    mListener.onTouched(false);
+                }
                 // 关闭波浪效果
-                startAnimator(mRatio, 0f);
-                currentPosition = -1;
-                if (null != onLetterIndexChangeListener) {
-                    if (mNewPosition >= 0 && mNewPosition < mLetters.length) {
-                        onLetterIndexChangeListener.onLetterClosed(mNewPosition, mLetters[mNewPosition]);
+                if (isTipOverlay()) {
+                    startAnimator(mRatio, 0f);
+                } else {
+                    // 隐藏提示字母View
+                    if (overlayTextView != null) {
+                        overlayTextView.setVisibility(GONE);
                     }
                 }
+                selectIndex = -1;
+                if (null != mListener) {
+                    if (mNewPosition >= 0 && mNewPosition < mLetterArray.length) {
+                        //mListener.onLetterClosed(mNewPosition, mLetterArray[mNewPosition]);
+                    }
+                    //改变标记状态
+                    isDown = false;
+                }
+
                 break;
             default:
                 break;
@@ -312,96 +350,111 @@ public class LetterIndexBar extends View {
         }
         mRatioAnimator.cancel();
         mRatioAnimator.setFloatValues(value);
-        mRatioAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator value) {
-                mRatio = (float) value.getAnimatedValue();
-                //球弹到位的时候，并且点击的位置变了，即点击的时候显示当前选择位置
-                if (mRatio == 1f && mOldPosition != mNewPosition) {
-                    if (mNewPosition >= 0 && mNewPosition < mLetters.length) {
-                        currentPosition = mNewPosition;
-                        if (onLetterIndexChangeListener != null) {
-                            onLetterIndexChangeListener.onLetterChanged(mNewPosition, mLetters[mNewPosition]);
-                        }
+        mRatioAnimator.addUpdateListener(value1 -> {
+            mRatio = (float) value1.getAnimatedValue();
+            //球弹到位的时候，并且点击的位置变了，即点击的时候显示当前选择位置
+            if (mRatio == 1f && mOldPosition != mNewPosition) {
+                if (mNewPosition >= 0 && mNewPosition < mLetterArray.length) {
+                    selectIndex = mNewPosition;
+                    if (mListener != null) {
+                        mListener.onLetterChanged(mLetterArray[mNewPosition], mNewPosition);
                     }
                 }
-                invalidate();
             }
+            invalidate();
         });
         mRatioAnimator.start();
     }
 
-    public boolean isShowHighlightBg() {
-        return showHighlightBg;
-    }
-
-    public void setShowHighlightBg(boolean showHighlightBg) {
-        this.showHighlightBg = showHighlightBg;
-    }
 
     /**
      * @param listener
      */
     public void setOnLetterChangeListener(OnLetterIndexChangeListener listener) {
-        this.onLetterIndexChangeListener = listener;
+        this.mListener = listener;
     }
 
 
     /**
-     * 获取字母表
+     * 设置页面滑动更新字母
      *
-     * @return 字母集合
+     * @param letter 当前字母
      */
-    public String[] getLetters() {
-        return mLetters;
+    public void onItemScrollUpdateLetter(String letter) {
+        //手指没触摸才调用
+        if (!isDown) {
+            Log.i(TAG, "onItemScrollUpdateLetter:" + letter);
+            for (int i = 0; i < mLetterArray.length; i++) {
+                if (mLetterArray[i].equals(letter) && selectIndex != i) {
+                    selectIndex = i;
+                    invalidate();
+                }
+            }
+        }
+
     }
 
+    public boolean isTipOverlay() {
+        return isTipOverlay;
+    }
+
+    public void setTipOverlay(boolean tipOverlay) {
+        isTipOverlay = tipOverlay;
+    }
+
+
+    public LetterIndexBar setOverlayTextView(TextView overlay) {
+        this.overlayTextView = overlay;
+        return this;
+    }
+
+
     /**
-     * 设置字母表
+     * 自定义侧边字母
      *
      * @param letters 字母集合
      */
-    public void setLetters(String[] letters) {
-        this.mLetters = letters;
+    public void setLetterArray(String[] letters) {
+        this.mLetterArray = letters;
         requestLayout();
         invalidate();
     }
 
-    public static class Builder {
-
-        private LetterIndexBar letterIndexBar;
-        private Context context;
-
-        public Builder(Context context) {
-            this.letterIndexBar = new LetterIndexBar(context);
-            this.context = context;
-        }
-
-        /**
-         * 设置索引文字大小
-         *
-         * @param indexTextSize 索引文字大小
-         * @return
-         */
-        public Builder setIndexTextSize(float indexTextSize) {
-            letterIndexBar.mIndexTextSize = indexTextSize;
-            return this;
-        }
-
-        /**
-         * 设置索引文字大小
-         *
-         * @param dimenId
-         * @return
-         */
-        public Builder setIndexTextSize(int dimenId) {
-            letterIndexBar.mIndexTextSize = this.context.getResources().getDimensionPixelSize(dimenId);
-            return this;
-        }
-
-        public LetterIndexBar build() {
-            return this.letterIndexBar;
-        }
-    }
+//    public static class Builder {
+//
+//        private LetterIndexBar letterIndexBar;
+//        private Context context;
+//
+//        public Builder(Context context) {
+//            this.letterIndexBar = new LetterIndexBar(context);
+//            this.context = context;
+//        }
+//
+//        /**
+//         * 设置索引文字大小
+//         *
+//         * @param indexTextSize 索引文字大小
+//         * @return
+//         */
+//        public Builder setIndexTextSize(float indexTextSize) {
+//            letterIndexBar.mIndexTextSize = indexTextSize;
+//            return this;
+//        }
+//
+//        /**
+//         * 设置索引文字大小
+//         *
+//         * @param dimenId
+//         * @return
+//         */
+//        public Builder setIndexTextSize(int dimenId) {
+//            letterIndexBar.mIndexTextSize = this.context.getResources().getDimensionPixelSize(dimenId);
+//            return this;
+//        }
+//
+//        public LetterIndexBar build() {
+//            return this.letterIndexBar;
+//        }
+//    }
 
 }

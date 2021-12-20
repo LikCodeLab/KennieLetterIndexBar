@@ -1,50 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.TestActivity">
+    android:orientation="vertical"
+    tools:context=".ui.TestContactActivity">
 
-    <TextView
-        android:id="@+id/tv_letter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#88000000"
-        android:gravity="center"
-        android:paddingStart="30dp"
-        android:paddingTop="10dp"
-        android:paddingEnd="30dp"
-        android:paddingBottom="10dp"
-        tools:text="A"
-        android:textColor="#FFFFFF"
-        android:textSize="40sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal">
 
-    <com.kennie.library.indexbar.LetterIndexBar
-        android:id="@+id/side_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dp_10"
-        android:layout_marginBottom="@dimen/dp_10"
-        android:paddingLeft="@dimen/dp_10"
-        android:paddingRight="@dimen/dp_10"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:itemCount="20"
+                tools:listitem="@layout/item_contact" />
+
+            <TextView
+                android:id="@+id/tv_letter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="#88000000"
+                android:gravity="center"
+                android:paddingStart="30dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="30dp"
+                android:paddingBottom="10dp"
+                android:textColor="#FFFFFF"
+                android:textSize="40sp"
+                android:visibility="gone"
+                tools:text="A"
+                tools:visibility="visible" />
+
+        </RelativeLayout>
+
+        <com.kennie.library.indexbar.LetterIndexBar
+            android:id="@+id/side_view"
+            android:layout_width="@dimen/dp_36"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_10"
+            app:sidebarBackgroundColor="#07C160"
+            app:sidebarChooseTextColor="@color/white" />
+
+    </FrameLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

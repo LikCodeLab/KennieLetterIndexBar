@@ -1,7 +1,7 @@
 package com.kennie.example.indexbar;
 
 
-import com.kennie.library.model.SortModel;
+import com.kennie.example.indexbar.model.SortModel;
 
 import java.util.Comparator;
 
@@ -17,7 +17,7 @@ public class PinyinComparator implements Comparator<SortModel> {
     @Override
     public int compare(SortModel o1, SortModel o2) {
         // A-Z 升序
-        return o1.getSortLetter().compareTo(o2.getSortLetter());
+        return o1.getFirstLetter().compareTo(o2.getFirstLetter());
     }
 
 }

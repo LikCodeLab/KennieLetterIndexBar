@@ -25,18 +25,18 @@ public interface OnLetterIndexChangeListener {
 
 
     /**
-     * 触摸选中时的回调
+     * 手指按下和抬起会回调这里
      *
-     * @param position RecyclerView将要滚动到的位置(-1代表未找到目标位置，则列表不用滚动)
-     * @param letter   选中的索引字符
+     * @param touched true|false
      */
-    void onLetterChanged(int position, String letter);
+    void onTouched(boolean touched);
+
 
     /**
-     * 触摸结束时的回调
+     * 索引字母改变时会回调这里
      *
-     * @param position RecyclerView将要滚动到的位置(-1代表未找到目标位置，则列表不用滚动)
-     * @param letter   选中的索引字符
+     * @param letter 选中的索引字符
+     * @param index  RecyclerView将要滚动到的位置(-1代表未找到目标位置，则列表不用滚动)
      */
-    void onLetterClosed(int position, String letter);
+    void onLetterChanged(String letter, int index);
 }

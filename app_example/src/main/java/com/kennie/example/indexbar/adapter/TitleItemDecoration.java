@@ -11,7 +11,8 @@ import android.view.View;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kennie.example.indexbar.entity.ContactModel;
+import com.kennie.example.indexbar.R;
+import com.kennie.example.indexbar.entity.Contact;
 
 import java.util.List;
 
@@ -21,17 +22,19 @@ import java.util.List;
 public class TitleItemDecoration extends RecyclerView.ItemDecoration {
 
     private static final String TAG = "TitleItemDecoration";
-    private List<ContactModel> mData;
+    private List<Contact> mData;
     private Paint mPaint;
     private Rect mBounds;
 
     private int mTitleHeight;
-    private static int TITLE_BG_COLOR = Color.parseColor("#FFDFDFDF");
+//    private static int TITLE_BG_COLOR = Color.parseColor("#FFDFDFDF");
+private static int TITLE_BG_COLOR = Color.parseColor("#FFF2F2F2");
+
     private static int TITLE_TEXT_COLOR = Color.parseColor("#FF000000");
     private static int mTitleTextSize;
 
 
-    public TitleItemDecoration(Context context, List<ContactModel> data) {
+    public TitleItemDecoration(Context context, List<Contact> data) {
         super();
         mData = data;
         mPaint = new Paint();
@@ -57,8 +60,8 @@ public class TitleItemDecoration extends RecyclerView.ItemDecoration {
                 if (position == 0) {//等于0的时候绘制title
                     drawTitle(c, left, right, child, params, position);
                 } else {
-                    if (null != mData.get(position).getSortLetter() && !mData.get(position)
-                            .getSortLetter().equals(mData.get(position - 1).getSortLetter())) {
+                    if (null != mData.get(position).getFirstLetter() && !mData.get(position)
+                            .getFirstLetter().equals(mData.get(position - 1).getFirstLetter())) {
                         //字母不为空，并且不等于前一个，也要title
                         drawTitle(c, left, right, child, params, position);
                     }
@@ -83,8 +86,8 @@ public class TitleItemDecoration extends RecyclerView.ItemDecoration {
         c.drawRect(left, child.getTop() - params.topMargin - mTitleHeight, right, child.getTop() - params.topMargin, mPaint);
         mPaint.setColor(TITLE_TEXT_COLOR);
 
-        mPaint.getTextBounds(mData.get(position).getSortLetter(), 0, mData.get(position).getSortLetter().length(), mBounds);
-        c.drawText(mData.get(position).getSortLetter(),
+        mPaint.getTextBounds(mData.get(position).getFirstLetter(), 0, mData.get(position).getFirstLetter().length(), mBounds);
+        c.drawText(mData.get(position).getFirstLetter(),
                 child.getPaddingLeft(),
                 child.getTop() - params.topMargin - (mTitleHeight / 2 - mBounds.height() / 2), mPaint);
     }
@@ -100,13 +103,13 @@ public class TitleItemDecoration extends RecyclerView.ItemDecoration {
     public void onDrawOver(Canvas c, final RecyclerView parent, RecyclerView.State state) {
         int position = ((LinearLayoutManager) (parent.getLayoutManager())).findFirstVisibleItemPosition();
         if (position == -1) return;//在搜索到没有的索引的时候position可能等于-1，所以在这里判断一下
-        String tag = mData.get(position).getSortLetter();
+        String tag = mData.get(position).getFirstLetter();
         View child = parent.findViewHolderForLayoutPosition(position).itemView;
         //Canvas是否位移过的标志
         boolean flag = false;
         if ((position + 1) < mData.size()) {
             //当前第一个可见的Item的字母索引，不等于其后一个item的字母索引，说明悬浮的View要切换了
-            if (null != tag && !tag.equals(mData.get(position + 1).getSortLetter())) {
+            if (null != tag && !tag.equals(mData.get(position + 1).getFirstLetter())) {
                 //当第一个可见的item在屏幕中剩下的高度小于title的高度时，开始悬浮Title的动画
                 if (child.getHeight() + child.getTop() < mTitleHeight) {
                     c.save();
@@ -150,8 +153,8 @@ public class TitleItemDecoration extends RecyclerView.ItemDecoration {
             if (position == 0) {
                 outRect.set(0, mTitleHeight, 0, 0);
             } else {
-                if (null != mData.get(position).getSortLetter() &&
-                        !mData.get(position).getSortLetter().equals(mData.get(position - 1).getSortLetter())) {
+                if (null != mData.get(position).getFirstLetter() &&
+                        !mData.get(position).getFirstLetter().equals(mData.get(position - 1).getFirstLetter())) {
                     //字母不为空，并且不等于前一个，绘制title
                     outRect.set(0, mTitleHeight, 0, 0);
                 } else {
