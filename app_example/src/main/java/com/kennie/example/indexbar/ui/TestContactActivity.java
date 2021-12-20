@@ -1,8 +1,16 @@
 package com.kennie.example.indexbar.ui;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
+import android.widget.AbsListView;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,11 +19,15 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemClickListener;
+import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.kennie.example.indexbar.PinyinComparator;
 import com.kennie.example.indexbar.R;
 import com.kennie.example.indexbar.adapter.ContactAdapter;
 import com.kennie.example.indexbar.adapter.TitleItemDecoration;
 import com.kennie.example.indexbar.entity.Contact;
+import com.kennie.example.indexbar.utils.KeyboardUtils;
 import com.kennie.library.indexbar.LetterIndexBar;
 
 import com.kennie.library.indexbar.OnLetterIndexChangeListener;
@@ -26,12 +38,18 @@ import java.util.List;
 
 public class TestContactActivity extends AppCompatActivity {
 
+    private EditText mSearchBox; // 搜索框
+    private ImageView mClearAllBtn; // 一键删除
+    private View mEmptyView;
+
     private LetterIndexBar mLetterIndexBar;
-    private TextView tv_letter ;
+    private TextView tv_letter;
 
     private RecyclerView mRV;
 
     private List<Contact> mDateList;
+    private List<Contact> mSearchList;
+
     private LinearLayoutManager mLayoutManager;
     private ContactAdapter mContactAdapter;
     private int mScrollState = -1;
@@ -41,6 +59,7 @@ public class TestContactActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text);
+
         tv_letter = findViewById(R.id.tv_letter);
         initData();
         initView();
@@ -53,6 +72,8 @@ public class TestContactActivity extends AppCompatActivity {
     }
 
     private void initView() {
+        initSearchView();
+
         mLetterIndexBar = (LetterIndexBar) findViewById(R.id.side_view);
         mLetterIndexBar.setOverlayTextView(tv_letter).setOnLetterChangeListener(new OnLetterIndexChangeListener() {
             /**
@@ -80,6 +101,48 @@ public class TestContactActivity extends AppCompatActivity {
                 }
             }
         });
+
+    }
+
+    private void initSearchView() {
+        mSearchBox = findViewById(R.id.et_search_box);
+        mSearchBox.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String keyword = s.toString();
+                if (TextUtils.isEmpty(keyword)) {
+                    mClearAllBtn.setVisibility(View.GONE);
+                    mEmptyView.setVisibility(View.GONE);
+                    mContactAdapter.setNewInstance(mDateList);
+                } else {
+                    mClearAllBtn.setVisibility(View.VISIBLE);
+                    mSearchList = searchContact(keyword);
+                    if (null != mSearchList && !mSearchList.isEmpty()) {
+                        mContactAdapter.setNewInstance(mSearchList);
+                    } else {
+                        mEmptyView.setVisibility(View.VISIBLE);
+                    }
+                }
+                mRV.scrollToPosition(0);
+            }
+        });
+        mClearAllBtn = findViewById(R.id.iv_clear_all);
+        mClearAllBtn.setOnClickListener(v -> mSearchBox.setText(""));
+        mEmptyView = findViewById(R.id.empty_view);
+
+    }
+
+    private void initRV() {
         mRV = (RecyclerView) findViewById(R.id.rv);
         mRV.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -87,7 +150,8 @@ public class TestContactActivity extends AppCompatActivity {
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 mScrollState = newState;
-                Log.i("TestContactActivity" , "onScrollStateChanged");
+                Log.i("TestContactActivity", "onScrollStateChanged");
+                KeyboardUtils.hideKeyboard(TestContactActivity.this);
 
             }
 
@@ -95,7 +159,7 @@ public class TestContactActivity extends AppCompatActivity {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                Log.i("TestContactActivity" , "onScrolled");
+                Log.i("TestContactActivity", "onScrolled");
                 if (mScrollState != -1) {
                     //第一个可见的位置
                     RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
@@ -114,9 +178,6 @@ public class TestContactActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private void initRV() {
         //RecyclerView设置manager
         mLayoutManager = new LinearLayoutManager(this);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -131,7 +192,16 @@ public class TestContactActivity extends AppCompatActivity {
 
     private void initAdapter() {
         mContactAdapter = new ContactAdapter(mDateList);
+        mContactAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(@NonNull BaseQuickAdapter adapter, @NonNull View view, int position) {
+                Log.i("TestContactActivity", "位置为：" + position);
+                Contact contact = mContactAdapter.getItem(position);
+                Toast.makeText(TestContactActivity.this, contact.getName(), Toast.LENGTH_SHORT).show();
+            }
+        });
         mRV.setAdapter(mContactAdapter);
+
     }
 
     private final String[] contactMock = {"裘豆豆", "B李莎", "jb", "Jobs", "动力火车", "伍佰", "#蔡依林", "$797835344$",
@@ -156,6 +226,17 @@ public class TestContactActivity extends AppCompatActivity {
         PinyinComparator mComparator = new PinyinComparator();
         // 根据a-z进行排序源数据
         Collections.sort(list, mComparator);
+        return list;
+    }
+
+    private List<Contact> searchContact(String keyword) {
+        List<Contact> list = new ArrayList<>();
+        for (Contact contact : mContactAdapter.getData()
+        ) {
+            if (contact.getName().contains(keyword) || contact.getFirstLetter().contains(keyword.toUpperCase())) {
+                list.add(contact);
+            }
+        }
         return list;
     }
 }

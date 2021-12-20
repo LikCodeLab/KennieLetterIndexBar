@@ -19,6 +19,7 @@ dependencies {
     implementation depK.core
     implementation depX.appcompat
     implementation depX.material
+    implementation depX.recyclerview
     implementation kennieX.res
     //implementation kennieX.KennieLetterIndexBar
     implementation project(':library_letterindexbar')
