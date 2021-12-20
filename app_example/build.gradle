@@ -20,6 +20,6 @@ dependencies {
     implementation depX.appcompat
     implementation depX.material
     implementation kennieX.res
-    implementation kennieX.KennieLetterIndexBar
-    //implementation project(':library_letterindexbar')
+    //implementation kennieX.KennieLetterIndexBar
+    implementation project(':library_letterindexbar')
 }

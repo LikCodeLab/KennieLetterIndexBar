@@ -27,9 +27,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-
 /**
  * @项目名 KennieIndexBar
  * @类名称 LetterIndexBarView
@@ -38,9 +35,9 @@ import androidx.appcompat.app.AlertDialog;
  * @修改人
  * @创建时间 2021/10/21 22:49
  */
-public class LetterIndexBarView extends View {
+public class LetterIndexBar extends View {
 
-    private static final String TAG = "LetterIndexBarView";
+    private static final String TAG = LetterIndexBar.class.getSimpleName();
 
 //    public static final String[] DEFAULT_LETTERS = {"↑", "★", "#", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"
 //            , "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
@@ -98,19 +95,22 @@ public class LetterIndexBarView extends View {
     // 圆形中心点X
     private float mBallCentreX;
 
+    private boolean showHighlightBg = true;// 是否显示高亮背景色
+    boolean hasDraw = false;
 
-    private OnLetterChangeListener onLetterChangeListener;
+
+    private OnLetterIndexChangeListener onLetterIndexChangeListener;
 
 
-    public LetterIndexBarView(Context context) {
+    public LetterIndexBar(Context context) {
         this(context, null);
     }
 
-    public LetterIndexBarView(Context context, AttributeSet attrs) {
+    public LetterIndexBar(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public LetterIndexBarView(Context context, AttributeSet attrs, int defStyle) {
+    public LetterIndexBar(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context, attrs);
     }
@@ -164,8 +164,11 @@ public class LetterIndexBarView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        hasDraw = true;
         // 绘制背景
-        drawBackground(canvas);
+        if (showHighlightBg) {
+            drawBackground(canvas);
+        }
         // 绘制字母列表
         drawLetters(canvas);
         // 绘制圆
@@ -277,8 +280,8 @@ public class LetterIndexBarView extends View {
                 if (mOldPosition != mNewPosition) {
                     if (mNewPosition >= 0 && mNewPosition < mLetters.length) {
                         currentPosition = mNewPosition;
-                        if (null != onLetterChangeListener && !TextUtils.isEmpty(mLetters[mNewPosition])) {
-                            onLetterChangeListener.onLetterChanged(mNewPosition, mLetters[mNewPosition]);
+                        if (null != onLetterIndexChangeListener && !TextUtils.isEmpty(mLetters[mNewPosition])) {
+                            onLetterIndexChangeListener.onLetterChanged(mNewPosition, mLetters[mNewPosition]);
                         }
                     }
                 }
@@ -290,9 +293,9 @@ public class LetterIndexBarView extends View {
                 // 关闭波浪效果
                 startAnimator(mRatio, 0f);
                 currentPosition = -1;
-                if (null != onLetterChangeListener) {
+                if (null != onLetterIndexChangeListener) {
                     if (mNewPosition >= 0 && mNewPosition < mLetters.length) {
-                        onLetterChangeListener.onLetterClosed(mNewPosition, mLetters[mNewPosition]);
+                        onLetterIndexChangeListener.onLetterClosed(mNewPosition, mLetters[mNewPosition]);
                     }
                 }
                 break;
@@ -317,8 +320,8 @@ public class LetterIndexBarView extends View {
                 if (mRatio == 1f && mOldPosition != mNewPosition) {
                     if (mNewPosition >= 0 && mNewPosition < mLetters.length) {
                         currentPosition = mNewPosition;
-                        if (onLetterChangeListener != null) {
-                            onLetterChangeListener.onLetterChanged(mNewPosition, mLetters[mNewPosition]);
+                        if (onLetterIndexChangeListener != null) {
+                            onLetterIndexChangeListener.onLetterChanged(mNewPosition, mLetters[mNewPosition]);
                         }
                     }
                 }
@@ -328,12 +331,19 @@ public class LetterIndexBarView extends View {
         mRatioAnimator.start();
     }
 
+    public boolean isShowHighlightBg() {
+        return showHighlightBg;
+    }
+
+    public void setShowHighlightBg(boolean showHighlightBg) {
+        this.showHighlightBg = showHighlightBg;
+    }
 
     /**
      * @param listener
      */
-    public void setOnLetterChangeListener(OnLetterChangeListener listener) {
-        this.onLetterChangeListener = listener;
+    public void setOnLetterChangeListener(OnLetterIndexChangeListener listener) {
+        this.onLetterIndexChangeListener = listener;
     }
 
 
@@ -359,11 +369,11 @@ public class LetterIndexBarView extends View {
 
     public static class Builder {
 
-        private LetterIndexBarView letterIndexBarView;
+        private LetterIndexBar letterIndexBar;
         private Context context;
 
         public Builder(Context context) {
-            this.letterIndexBarView = new LetterIndexBarView(context);
+            this.letterIndexBar = new LetterIndexBar(context);
             this.context = context;
         }
 
@@ -374,7 +384,7 @@ public class LetterIndexBarView extends View {
          * @return
          */
         public Builder setIndexTextSize(float indexTextSize) {
-            letterIndexBarView.mIndexTextSize = indexTextSize;
+            letterIndexBar.mIndexTextSize = indexTextSize;
             return this;
         }
 
@@ -385,12 +395,12 @@ public class LetterIndexBarView extends View {
          * @return
          */
         public Builder setIndexTextSize(int dimenId) {
-            letterIndexBarView.mIndexTextSize = this.context.getResources().getDimensionPixelSize(dimenId);
+            letterIndexBar.mIndexTextSize = this.context.getResources().getDimensionPixelSize(dimenId);
             return this;
         }
 
-        public LetterIndexBarView build() {
-            return this.letterIndexBarView;
+        public LetterIndexBar build() {
+            return this.letterIndexBar;
         }
     }
 

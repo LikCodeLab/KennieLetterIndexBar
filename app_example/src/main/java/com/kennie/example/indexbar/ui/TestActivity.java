@@ -15,8 +15,9 @@ import com.kennie.example.indexbar.adapter.SortAdapter;
 import com.kennie.example.indexbar.adapter.TitleItemDecoration;
 import com.kennie.example.indexbar.entity.ContactModel;
 import com.kennie.example.indexbar.utils.PinyinUtils;
-import com.kennie.library.indexbar.LetterIndexBarView;
-import com.kennie.library.indexbar.OnLetterChangeListener;
+import com.kennie.library.indexbar.LetterIndexBar;
+
+import com.kennie.library.indexbar.OnLetterIndexChangeListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class TestActivity extends AppCompatActivity {
 
-    private LetterIndexBarView mLetterIndexBar;
+    private LetterIndexBar mLetterIndexBar;
 
     private RecyclerView mRV;
 
@@ -45,10 +46,10 @@ public class TestActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_text);
-        mLetterIndexBar = (LetterIndexBarView) findViewById(R.id.side_view);
+        mLetterIndexBar = (LetterIndexBar) findViewById(R.id.side_view);
         mRV = (RecyclerView) findViewById(R.id.rv);
         mComparator = new PinyinComparator();
-        mLetterIndexBar.setOnLetterChangeListener(new OnLetterChangeListener() {
+        mLetterIndexBar.setOnLetterChangeListener(new OnLetterIndexChangeListener() {
             @Override
             public void onLetterChanged(int position, String letter) {
                 //该字母首次出现的位置

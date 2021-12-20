@@ -21,7 +21,7 @@ package com.kennie.library.indexbar;
  * @修改人
  * @创建时间 2021/10/26 21:12
  */
-public interface OnLetterChangeListener {
+public interface OnLetterIndexChangeListener {
 
 
     /**

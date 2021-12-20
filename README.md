@@ -53,7 +53,7 @@ dependencies {
 ```
 #### XML
 ```xml
-    <com.kennie.library.indexbar.LetterIndexBarView
+    <com.kennie.library.indexbar.LetterIndexBar
         android:id="@+id/side_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
